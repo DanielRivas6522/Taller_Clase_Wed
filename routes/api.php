@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiCategoriaController;
+use App\Http\Controllers\Api\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,18 +20,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Listar todas las categorías
-Route::get('/categorias', [ApiCategoriaController::class, 'index']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-// Crear una nueva categoría
-Route::post('/categorias', [ApiCategoriaController::class, 'store']);
+Route::middleware(['auth:api'])->group(function () {
+    // Listar todas las categorías
+    Route::get('/categorias', [ApiCategoriaController::class, 'index']);
 
-// Mostrar una categoría específica
-Route::get('/categorias/{id}', [ApiCategoriaController::class, 'show']);
+    // Crear una nueva categoría
+    Route::post('/categorias', [ApiCategoriaController::class, 'store']);
 
-// Actualizar una categoría
-Route::put('/categorias/{id}', [ApiCategoriaController::class, 'update']);
-Route::patch('/categorias/{id}', [ApiCategoriaController::class, 'update']);
+    // Mostrar una categoría específica
+    Route::get('/categorias/{id}', [ApiCategoriaController::class, 'show']);
 
-// Eliminar una categoría
-Route::delete('/categorias/{id}', [ApiCategoriaController::class, 'destroy']);
+    // Actualizar una categoría
+    Route::put('/categorias/{id}', [ApiCategoriaController::class, 'update']);
+    Route::patch('/categorias/{id}', [ApiCategoriaController::class, 'update']);
+
+    // Eliminar una categoría
+    Route::delete('/categorias/{id}', [ApiCategoriaController::class, 'destroy']);
+});
